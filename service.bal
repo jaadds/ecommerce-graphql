@@ -40,11 +40,11 @@ type StockDetails record {
     string material;
 };
 
-configurable string USER = "choreo";
-configurable string PASSWORD = "wso2!234";
-configurable string HOST = "sahackathon.mysql.database.azure.com";
-configurable int PORT = 3306;
-configurable string DATABASE = "dushan_sa_2023";
+configurable string USER = ?;
+configurable string PASSWORD = ?;
+configurable string HOST = ?;
+configurable int PORT = ?;
+configurable string DATABASE = ?;
 //new code
 mysql:Client mysqlEp = check new (host = HOST, user = USER, password = PASSWORD, database = DATABASE, port = PORT);
 
