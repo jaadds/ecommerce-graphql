@@ -1,4 +1,3 @@
-import ballerinax/mysql;
 import ballerinax/mysql.driver as _;
 import ballerina/graphql;
 import ballerina/sql;
@@ -40,13 +39,6 @@ type StockDetails record {
     string material;
 };
 
-configurable string USER = ?;
-configurable string PASSWORD = ?;
-configurable string HOST = ?;
-configurable int PORT = ?;
-configurable string DATABASE = ?;
-//new code
-mysql:Client mysqlEp = check new (host = HOST, user = USER, password = PASSWORD, database = DATABASE, port = PORT);
 
 public distinct service class CatalogData {
     private final readonly & Catalog catalogRecord;
@@ -93,26 +85,6 @@ service / on new graphql:Listener(8080) {
 
 function getAllItems() returns Catalog[]|error {
     Catalog[] catalogs = [];
-    stream<ItemRecord, error?> resultStream =  mysqlEp->query(
-        `SELECT * FROM items i, stock s where i.item_id=s.item_id`
-    );
-    check from ItemRecord item in resultStream
-        do {
-            Catalog catalog = ({
-                itemID: item.itemID,
-                itemName: item.itemName,
-                itemDesc: item.itemDesc,
-                itemImage: item.itemImage,
-                price: item.price,
-                stockDetails: {
-                    includes: item.includes,
-                    intendedFor: item.intendedFor,
-                    color: item.color,
-                    material: item.material
-                }
-            });
-            catalogs.push(catalog);
-        };
-    check resultStream.close();
+    
     return catalogs;
 }
